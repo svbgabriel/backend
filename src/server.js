@@ -2,6 +2,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const cors = require('cors');
+const dotenv = require('dotenv');
+
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 app.use(cors());
@@ -15,7 +20,7 @@ io.on('connection', (socket) => {
   });
 });
 
-mongoose.connect('mongodb+srv://omnistack:omnistack@omnistack-6b8ig.mongodb.net/omnistack?retryWrites=true', {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
 });
 
@@ -31,4 +36,4 @@ app.use('/files', express.static(path.resolve(__dirname, '..', 'tmp')));
 
 app.use(require('./routes'));
 
-server.listen(process.env.PORT || 3333);
+server.listen(process.env.PORT);
