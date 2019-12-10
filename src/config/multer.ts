@@ -1,9 +1,8 @@
-/* eslint-disable no-param-reassign */
-const multer = require('multer');
-const path = require('path');
-const crypto = require('crypto');
+import multer from 'multer';
+import path from 'path';
+import crypto from 'crypto';
 
-module.exports = {
+export default {
   dest: path.resolve(__dirname, '..', '..', 'tmp'),
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
@@ -11,11 +10,9 @@ module.exports = {
     },
     filename: (req, file, cb) => {
       crypto.randomBytes(16, (err, hash) => {
-        if (err) cb(err);
+        if (err) cb(err, file.filename);
 
-        file.key = `${hash.toString('hex')}-${file.originalname}`;
-
-        cb(null, file.key);
+        cb(null, `${hash.toString('hex')}-${file.originalname}`);
       });
     },
   }),
